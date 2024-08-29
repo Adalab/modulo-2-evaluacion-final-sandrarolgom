@@ -17,8 +17,10 @@ const handleClickFav = (event)=>{
         animesFavorites.push(animeClicked) //en el array de animesfavorites, mete (push) el objeto clicado que está recogido en animeClicked
         console.log(animesFavorites);
         renderAnimes(arrayAnime); //tiene que ser el array general porque si ponemos el nuevo array te pinta solo el clicado
+        const saveAnimesFavorites = localStorage.setItem('animesFavorites', JSON.stringify(animesFavorites)); // aquí estoy guardando los datos clicados en el el localstorage y creando un nuevo array, le ponemos stringify porque necesitamos que entren los datos como array
         renderAnimesFavorites(animesFavorites);
     }
+    
 }
 const renderAnimes = (animes)=>{
     sectionAnimes.innerHTML='';
@@ -87,4 +89,13 @@ const handleClickSearch = (event)=>{
     getDataApi(valueInput); //le pongo como parámetro a la función getDataApi el valor del input
 }
 searchBtn.addEventListener('click', handleClickSearch);
+
 getDataApi('naruto'); //una vez que tengo los datos, los pinto al iniciar la página
+// aquí tendría que renderizar los animesFavorites al cargar la página
+const getAnimeFavoriteDataSave = JSON.parse(localStorage.getItem('animesFavorites'));
+if(getAnimeFavoriteDataSave){
+    animesFavorites = getAnimeFavoriteDataSave; //segundo: el array de favoritos primero se pasa como vacío en la línea siete e inmediatamente después se rellena con los datos del localstorage
+    renderAnimesFavorites(animesFavorites); //volvemos a renderizar el array
+}
+
+
