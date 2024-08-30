@@ -8,20 +8,24 @@ let animesFavorites = [] //array que hay que llenar con los animes clicados
 
 const handleClickFav = (event)=>{
     const id = parseInt(event.currentTarget.id); //ADD PARSEINT
-
     const indexAnimeFavorite = animesFavorites.findIndex((item)=>item.mal_id === id); //constante que busque si el id pintado en caso de que lo haya, sea igual al id clicado, si no está, me devuelve -1
     console.log(indexAnimeFavorite); //aquí da -1 porque aun no hay nada en el array
 
     if (indexAnimeFavorite === -1){
         const animeClicked = arrayAnime.find((item)=>item.mal_id===id); //del array original, búscame el elemento cuyo id sea igual al id clicado
         animesFavorites.push(animeClicked) //en el array de animesfavorites, mete (push) el objeto clicado que está recogido en animeClicked
-        console.log(animesFavorites);
         renderAnimes(arrayAnime); //tiene que ser el array general porque si ponemos el nuevo array te pinta solo el clicado
         const saveAnimesFavorites = localStorage.setItem('animesFavorites', JSON.stringify(animesFavorites)); // aquí estoy guardando los datos clicados en el el localstorage y creando un nuevo array, le ponemos stringify porque necesitamos que entren los datos como array
         renderAnimesFavorites(animesFavorites);
     }
-    
 }
+const handleRemoveFavorite = (event)=>{
+    event.preventDefault();
+    const id = parseInt(event.currentTarget.mal_id); //he metido en una variable cada id
+    const indexOfAnimesFavorites = animesFavorites.indexOf(id);
+    const removeFavoriteTotal = animesFavorites.splice(indexOfAnimesFavorites, 1);
+    renderAnimesFavorites(animesFavorites);
+};
 const renderAnimes = (animes)=>{
     sectionAnimes.innerHTML='';
     const titleSection = document.createElement('h3');
@@ -52,7 +56,7 @@ const renderAnimes = (animes)=>{
 }
 //renderizar la nueva función render con los favoritos
 const renderAnimesFavorites = (animesFavorites)=>{
-    sectionAnimesFavorites.innerHTML = ''
+    sectionAnimesFavorites.innerHTML = '';
     const titleSectionFavorites = document.createElement('h3');
     const textTitleSectionFavorites = document.createTextNode('Favoritos');
     titleSectionFavorites.appendChild(textTitleSectionFavorites);
@@ -71,9 +75,16 @@ const renderAnimesFavorites = (animesFavorites)=>{
         imageFavorite.setAttribute('src', eachAnimeFavorite.images.jpg.image_url)
         imageFavorite.setAttribute('alt', eachAnimeFavorite.title);
         listAnimesFavorite.appendChild(imageFavorite);
+
+        const removeFavorite = document.createElement('button');
+        removeFavorite.setAttribute('class', 'removeBtn');
+        removeFavorite.setAttribute('id', eachAnimeFavorite.mal_id);
+        const removeX = document.createTextNode('X');
+        removeFavorite.appendChild(removeX);
+        listAnimesFavorite.appendChild(removeFavorite);
+        removeFavorite.addEventListener('click', handleRemoveFavorite)
     }
 }
-
 const getDataApi = (value)=>{
     fetch (`https://api.jikan.moe/v4/anime?q=${value}`)
     .then ((response)=> response.json())

@@ -9,8 +9,16 @@
 }
 article{
     border: 1px solid gray;
+    text-align: center;
 }
 .favorite{
     background-color: black;
     color: white;
+}
+.removeBtn{
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    margin: 10px;
 }
